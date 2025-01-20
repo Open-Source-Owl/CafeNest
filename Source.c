@@ -1,25 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include<stdint.h>
-#include <time.h>
+#include "cafe.h"
 #define PASSWORD_FILE "adminpass.txt"
 #define MENU_FILE "menu.txt"
 #define SALES_REPORT_FILE "salereport.txt"
 #define TOKEN "token.txt"
 
-typedef struct MenuItem {
-    char name[50];
-    float price;
-    unsigned int  stock; // 1 = stock, 0 = unstock
-    struct MenuItem *next;
-} MenuItem ;
-
-typedef struct MenuCategory {
-    char categoryName[50];
-    MenuItem *items;
-    struct MenuCategory *next;
-} MenuCategory;
+/* 
+use unsigned int 
+why used manual array & is there any alternative way 
+*/
 
 
 void readpass(char password[]) {
@@ -31,11 +19,11 @@ void readpass(char password[]) {
     }
 
     fscanf(file, "%s", password);
-
     fclose(file);
 }
+
 void changePass(){
-                  char enteredpass[10];
+     char enteredpass[10];
      char correctpass[10];
 
      readpass(correctpass);
@@ -217,7 +205,7 @@ void displayMenu(MenuCategory *currentCategory, int *flag){
         int index = 1;
         while (currentItem) {
 
-                printf("%d. %s - $%.2f - %u\n", index, currentItem->name, currentItem->price,currentItem->stock);
+                printf("%d. %s - %.2f - %u\n", index, currentItem->name, currentItem->price,currentItem->stock);
 
             currentItem = currentItem->next;
             index++;
@@ -362,27 +350,9 @@ void deleteItem(MenuCategory *menu) {
     writeMenu(menu);
 }
 
-
-
-
-/*void deleteItem(MenuCategory *menu){
-       MenuCategory *currentCategory = menu;
-       unsigned int choice;
-
-       printf("\n Here is the category: ");
-       printf("\n1.Starters\n2.Main Course\n3.Desserts\n4.Drinks\nSelect a category for delete an item:");
-       scanf("%d",&choice);
-    for(int i=1;i<choice;i++){
-       currentCategory=currentCategory->next;
-    }
-          /Incomplete/
-}*/
 void changePrice(MenuCategory *menu){
     MenuCategory *currentCategory = menu;
-  /*  while(currentCategory){
-        displayMenu(currentCategory,1);
-        currentCategory=currentCategory->next;
-        }*/
+
         unsigned int choice;
     printf("\n Here is the list of  categories: ");
        printf("\n1.Starters\n2.Main Course\n3.Desserts\n4.Drinks\nEnter your choice");
@@ -436,15 +406,13 @@ void updateStock(MenuCategory *menu){
      printf("Successfully Updated");
  }
 
-void takeorder(MenuItem *menu){
+void takeorder(MenuCategory *menu){
         FILE *file = fopen(TOKEN, "w");
     if (!file) {
-        printf("Error opening file for saving");
+        printf("Error opening token file ");
         return;
     }
     unsigned int token;
-
-
     MenuCategory *currentCategory = menu;
     unsigned  int x=0;
     while(currentCategory){
@@ -465,7 +433,7 @@ void takeorder(MenuItem *menu){
         }
         else if(choice ==1){
 
-        choice=NULL;
+        choice=0;
 
          time_t current_time;
     struct tm *local_time;
@@ -586,7 +554,7 @@ void takeorder(MenuItem *menu){
     case 4 : updateStock(menu);
             updateMenu(menu);
               break;
-    case 5 :return 0;
+    case 5 :return ;
     default:
         printf("Invalid choice.");
     }
@@ -622,85 +590,6 @@ void clearsalesreport(){
     fclose(sales_report_file);
     printf("Sales report cleared successfully.");
 }
-int main(){
-    MenuCategory *menu = readMenu();
-    MenuCategory *currentCategory = menu;
-    unsigned int choice;
-     unsigned login =0;
-     while(1){
-        if (login ==0){
-            printf("\n Welcome to Automated Cafeteria\n");
-            printf("1. Log in as Admin\n");
-            printf("2. Log in as Customer\n");
-            printf("3. Exit\n");
-            printf("Enter your choice: ");
-            scanf("%d", &choice);
-             switch (choice) {
-                case 1:
-                    if (adminlog()) {
-                        login = 1;
-                        printf("Welcome to the system.\n");
-                    } else {
-                        login = 0;
-                        printf("Return to main system.\n");
-                    }
-                    break;
-                case 2:
-                        takeorder(menu);
-                    break;
-                case 3:
-                    printf("Exiting the program. Goodbye!\n");
-                    exit(0);
-                default:
-                    printf("Invalid choice. Please try again.\n");
-             }
-        }
-        else {
-            printf("\nAdmin Options:\n");
 
-            printf("1. Update Menu\n");
-            printf("2. Display menu \n");
-            printf("3. View Sales Report\n");
-            printf("4. Clear Sales Report\n");
-            printf("5. Change password\n");
-            printf("6. Log out\n");
-            printf("7. Exit\n");
-            unsigned int x=1;
-            printf("Enter your choice: ");
-            scanf("%d", &choice);
 
-            switch (choice) {
 
-                case 1:
-                    updateMenu(menu);
-                    break;
-                case 2:
-                     while(currentCategory){
-                     displayMenu(currentCategory,&x);
-                      currentCategory=currentCategory->next;
-                     }
-                    break;
-                case 3:
-                   viewsale();
-                    break;
-                case 4:
-                    clearsalesreport();
-                    break;
-                case 5:
-                     changePass();
-                    break;
-                case 6:
-                   login = 0;
-                    printf("Admin logged out.\n");
-                    break;
-                case 7:
-                    printf("Exiting the program. Goodbye!\n");
-                    exit(1);
-                    break;
-                default:
-                    printf("Invalid choice. Please try again.\n");
-            }
-        }
-     }
- return 0;
-}
