@@ -4,11 +4,6 @@
 #define SALES_REPORT_FILE "salereport.txt"
 #define TOKEN "token.txt"
 
-/* 
-use unsigned int 
-why used manual array & is there any alternative way 
-*/
-
 
 void readpass(char password[]) {
     FILE *file = fopen(PASSWORD_FILE, "r");
