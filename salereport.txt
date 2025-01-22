@@ -1,0 +1,9 @@
+1-----
+Token number is 1 
+Order Date: 2025-01-22 | Order Time: 10:24:33
+Fried Dumplings - Quantity: 1 - Subtotal: 100.00 Taka
+Sushi Platter - Quantity: 1 - Subtotal: 350.00 Taka
+Red Bean Pancakes - Quantity: 1 - Subtotal: 120.00 Taka
+Green Tea - Quantity: 1 - Subtotal: 50.00 Taka
+ Total Bill of this customer: 620.00 Taka 
+=========================================

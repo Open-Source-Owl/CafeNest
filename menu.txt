@@ -1,0 +1,17 @@
+#Starters
+Fried Dumplings,100.00,58
+Chicken Satay,120.00,38
+Spring Rolls,80.00,50
+#Main Course
+Sushi Platter,350.00,15
+Pad Thai,200.00,25
+Beef Bulgogi,300.00,20
+Chicken Biryani,250.00,28
+#Desserts
+Matcha Ice Cream,100.00,30
+Red Bean Pancakes,120.00,25
+Mango Sticky Rice,150.00,20
+#Drinks
+Coconut Water,70.00,29
+Thai Iced Tea,80.00,37
+Green Tea,50.00,50
