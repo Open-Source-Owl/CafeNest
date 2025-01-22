@@ -27,14 +27,14 @@
 /*
  * Structure representing a menu item.
  * Fields:
- * - name: The name of the menu item (max 50 characters).
+ * - name: The name of the menu item (max 20 characters).
  * - price: The price of the item.
  * - stock: The quantity of the item available in stock.
  * - next: Pointer to the next item in the linked list.
  * - previous: Pointer to the previous item in the linked list.
  */
 typedef struct MenuItem {
-    char name[50];
+    char name[20];
     float price;
     uint32_t stock;
     struct MenuItem *next, *previous;
@@ -43,13 +43,13 @@ typedef struct MenuItem {
 /*
  * Structure representing a menu category.
  * Fields:
- * - categoryName: The name of the category (max 50 characters).
+ * - categoryName: The name of the category (max 15 characters).
  * - items: Pointer to the linked list of items in the category.
  * - next: Pointer to the next category in the linked list.
  * - previous: Pointer to the previous category in the linked list.
  */
 typedef struct MenuCategory {
-    char categoryName[50];
+    char categoryName[15];
     MenuItem *items;
     struct MenuCategory *next, *previous;
 } MenuCategory;
@@ -145,5 +145,15 @@ void viewsale();
  * Clears the sales report by overwriting the file with an empty state.
  */
 void clearsalesreport();
+
+/**
+ * admin operation handles with this function
+ */
+void admin(MenuCategory *menu,MenuCategory *currentCategory,uint32_t *login);
+
+/**
+ * homepage for the admin and customer and exit 
+ */
+void homepage();
 
 #endif // CAFE_H
