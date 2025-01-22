@@ -4,7 +4,7 @@
  * Author: Team ProgBuddy
  *
  * Description:
- * This is the main file for the University Café Management System.
+ * This is the main file for the Autometed cafeteria .
  * It serves as the entry point of the application, providing a menu-driven
  * interface for both admins and customers to interact with the system.
  */
