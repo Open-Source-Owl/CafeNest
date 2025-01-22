@@ -1,18 +1,17 @@
 #include "cafe.h"
-#define PASSWORD_FILE "adminpass.txt"
-#define MENU_FILE "menu.txt"
-#define SALES_REPORT_FILE "salereport.txt"
-#define TOKEN "token.txt"
+#include<stdio.h>
 
+ /*use uint32_t 
+ why use array with fixed size*/
 
 void readpass(char password[]) {
+
     FILE *file = fopen(PASSWORD_FILE, "r");
 
     if (file == NULL) {
-        perror("Error opening admin password file");
+        printf("Error opening admin password file");
         exit(EXIT_FAILURE);
     }
-
     fscanf(file, "%s", password);
     fclose(file);
 }
@@ -30,7 +29,7 @@ void changePass(){
         exit(0);
     }
       printf(" Enter old Admin Password: ");
-     int i = 0;
+    uint32_t i = 0;
     while (1) {
         char ch = getch();
 
@@ -57,13 +56,13 @@ void changePass(){
     if (strcmp(enteredpass, correctpass) == 0) {
         printf("\nCorrect password\n");
 
-    char pass[50];
+    char pass[10];
     printf("Write new pass: ");
 
     fflush(stdin);//to fix an undefined behavior
     gets(pass);
 
-    int i=0;
+    uint32_t i=0;
     while(pass[i]!='\0')
     {
     if(pass[i]==' ')
@@ -91,7 +90,7 @@ int adminlog(){
 
     printf("Admin Password: ");
 
-    int i = 0;
+    uint32_t i = 0;
     while (1) {
         char ch = getch();
 
@@ -154,7 +153,7 @@ int adminlog(){
 MenuCategory* readMenu() {
     FILE *file = fopen(MENU_FILE, "r");
     if (!file) {
-        perror("Error opening menu file");
+        printf("Error opening menu file");
         return NULL;
     }
 
@@ -200,7 +199,7 @@ void displayMenu(MenuCategory *currentCategory, int *flag){
         int index = 1;
         while (currentItem) {
 
-                printf("%d. %s - %.2f - %u\n", index, currentItem->name, currentItem->price,currentItem->stock);
+                printf("%d. %s - BDT %.2f - %u\n", index, currentItem->name, currentItem->price,currentItem->stock);
 
             currentItem = currentItem->next;
             index++;
@@ -212,7 +211,7 @@ void displayMenu(MenuCategory *currentCategory, int *flag){
         int index = 1;
         while (currentItem) {
             if (currentItem->stock>0) {
-                printf("%d. %s - $%.2f\n", index, currentItem->name, currentItem->price);
+                printf("%d. %s - BDT %.2f\n", index, currentItem->name, currentItem->price);
                 index++;
             }
             currentItem = currentItem->next;
@@ -223,6 +222,7 @@ void displayMenu(MenuCategory *currentCategory, int *flag){
 }
 
 void writeMenu(MenuCategory *menu) {
+
     FILE *file = fopen(MENU_FILE, "w");
     if (!file) {
         printf("Error opening file for saving");
@@ -240,19 +240,19 @@ void writeMenu(MenuCategory *menu) {
     }
 
     fclose(file);
-    printf("Menu saved successfully menu file");
+
 }
 void addItem(MenuCategory *menu) {
 
     float price;
-    unsigned int availability;
+    uint32_t availability;
      MenuCategory *currentCategory = menu;
-    unsigned int choice;
+    uint32_t choice;
 
        printf("\n Here is the list of  categories: ");
        printf("\n1.Starters\n2.Main Course\n3.Desserts\n4.Drinks\nEnter your choice");
-       scanf("%d",&choice);
-    for(int i=1;i<choice;i++){
+       scanf("%u",&choice);
+    for(uint32_t i=1;i<choice;i++){
        currentCategory=currentCategory->next;
     }
             MenuItem *newItem = (MenuItem *)malloc(sizeof(MenuItem));
@@ -264,7 +264,7 @@ void addItem(MenuCategory *menu) {
             newItem->price = price;
 
             printf("Enter stock: ");
-            scanf("%d", &availability);
+            scanf("%u", &availability);
             newItem->stock = availability;
 
             newItem->next = currentCategory->items;
@@ -277,7 +277,7 @@ void addItem(MenuCategory *menu) {
 
 void deleteItem(MenuCategory *menu) {
     MenuCategory *currentCategory = menu;
-    unsigned int choice;
+    uint32_t choice;
 
     printf("\n--- Categories ---");
     printf("\n1. Starters");
@@ -288,7 +288,7 @@ void deleteItem(MenuCategory *menu) {
     scanf("%u", &choice);
 
     // Find the way in the selected category
-    for (int i = 1; i < choice; i++) {
+    for ( uint32_t i = 1; i < choice; i++) {
         if (currentCategory->next) {
             currentCategory = currentCategory->next;
         } else {
@@ -305,7 +305,7 @@ void deleteItem(MenuCategory *menu) {
     }
 
     printf("\n--- Items in %s ---\n", currentCategory->categoryName);
-    int index = 1;
+    uint32_t index = 1;
     while (currentItem) {
         printf("%d. %s - $%.2f - %u\n", index, currentItem->name, currentItem->price, currentItem->stock);
         currentItem = currentItem->next;
@@ -314,7 +314,7 @@ void deleteItem(MenuCategory *menu) {
 
     // Get item number to delete
     printf("Enter the item number to delete: ");
-    unsigned int itemNumber;
+    uint32_t itemNumber;
     scanf("%u", &itemNumber);
 
     if (itemNumber < 1 || itemNumber >= index) {
@@ -326,7 +326,7 @@ void deleteItem(MenuCategory *menu) {
     currentItem = currentCategory->items;
     MenuItem *prevItem = NULL;
 
-    for (int i = 1; i < itemNumber; i++) {
+    for (uint32_t i = 1; i < itemNumber; i++) {
         prevItem = currentItem;
         currentItem = currentItem->next;
     }
@@ -346,82 +346,95 @@ void deleteItem(MenuCategory *menu) {
 }
 
 void changePrice(MenuCategory *menu){
+
     MenuCategory *currentCategory = menu;
 
-        unsigned int choice;
+        uint32_t choice;
     printf("\n Here is the list of  categories: ");
        printf("\n1.Starters\n2.Main Course\n3.Desserts\n4.Drinks\nEnter your choice");
-       scanf("%d",&choice);
+       scanf("%u",&choice);
        currentCategory =menu;
 
-    for(int i=1;i<choice;i++){
+    for(uint32_t i=1;i<choice;i++){
        currentCategory=currentCategory->next;
     }
     MenuItem *currentMenu=currentCategory->items;
     printf("Enter the number of the item from category %s to change the price : ",currentCategory->categoryName);
-    int item_number_price;
-    scanf("%d", &item_number_price);
-    for(int i=1;i<item_number_price;i++){
+    uint32_t item_number_price;
+    scanf("%u", &item_number_price);
+    for(uint32_t i=1;i<item_number_price;i++){
         currentMenu=currentMenu->next;
     }
      printf("Enter new for %s : ",currentMenu->name);
      scanf("%f",&currentMenu->price);
      writeMenu(menu);
      printf("Successfully Updated");
+
 }
 
 void updateStock(MenuCategory *menu){
+
      MenuCategory *currentCategory = menu;
-     unsigned int choice;
+     uint32_t choice;
     printf("\n Here is the list of  categories: ");
     printf("\n1.Starters\n2.Main Course\n3.Desserts\n4.Drinks\nEnter your choice");
-    scanf("%d",&choice);
+    scanf("%u",&choice);
     if(choice>0 && choice<4){
         printf("Invalid choice");
         return;
     }
 
-    for(int i=1;i<choice;i++){
+    for(uint32_t i=1;i<choice;i++){
        currentCategory=currentCategory->next;
     }
     MenuItem *currentMenu=currentCategory->items;
     printf("Enter the number of the item from category %s to add stock : ",currentCategory->categoryName);
-   unsigned int item_number,quantity;
-    scanf("%d", &item_number);
-    for(int i=1;i<item_number;i++){
+   uint32_t item_number,quantity;
+    scanf("%u", &item_number);
+    for(uint32_t i=1;i<item_number;i++){
         currentMenu=currentMenu->next;
     }
-    unsigned int a;
+    uint32_t a;
     do{
-        printf("Enter availability (1 for stock, 0 for unstock): ");
+        printf("Enter new stock: ");
          scanf("%u", &a);
     }while(a!=0 || a!=1);
      currentMenu->stock=a;
      writeMenu(menu);
      printf("Successfully Updated");
  }
+int generateToken(){
 
-void takeorder(MenuCategory *menu){
-        FILE *file = fopen(TOKEN, "w");
-    if (!file) {
-        printf("Error opening token file ");
-        return;
+    FILE *file = fopen(SALES_REPORT_FILE, "r+");
+    if (file == NULL) {
+        printf("Error opening menu file");
+        exit(EXIT_FAILURE);
     }
-    unsigned int token;
+    uint32_t num;
+    fscanf(file,"%u",&num);
+    num=num+1;
+    fseek(file,0,SEEK_SET);
+    fprintf(file,"%u",num);
+    fclose(file);
+    return num;
+
+}
+void takeorder(MenuCategory *menu){
+         
     MenuCategory *currentCategory = menu;
-    unsigned  int x=0;
+    uint32_t x=0;
     while(currentCategory){
         displayMenu(currentCategory,&x);
         currentCategory=currentCategory->next;
         }
         currentCategory=menu;
 
-       int choice;
-        printf("\n What you wants to do ?\n1.Place order\n2.Back from customer option:");
-        scanf("%d",&choice);
+       uint32_t choice;
+        printf("\nWhat you wants to do ?\n1.Place order\n2.Back to home :");
+        scanf("%u",&choice);
         while(choice<1 || choice>2){
             printf("Invalid inputs. Please enter a valid input (1/2) : ");
-             scanf("%d",&choice);
+             scanf("%u",&choice);
         }
          if (choice==2) {
            return;
@@ -429,8 +442,10 @@ void takeorder(MenuCategory *menu){
         else if(choice ==1){
 
         choice=0;
+ 
+     uint32_t token_num=generateToken();
 
-         time_t current_time;
+     time_t current_time;
     struct tm *local_time;
 
     time(&current_time);
@@ -445,45 +460,45 @@ void takeorder(MenuCategory *menu){
     }
 
     fprintf(order_file, "-----\n");
-    fprintf(order_file, "Order Date: %04d-%02d-%02d | Order Time: %02d:%02d:%02d\n",
+    fprintf(order_file, "Token number is %u \nOrder Date: %04d-%02d-%02d | Order Time: %02d:%02d:%02d\n",token_num,
             local_time->tm_year + 1900, local_time->tm_mon + 1, local_time->tm_mday,
             local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
         float totalBill=0;
-        unsigned int totalOderCount=0;
+        uint32_t totalOderCount=0;
 
 
         while(currentCategory){
             printf("Select item from %s to place order ",currentCategory->categoryName);
-         int itemCount=0;
+        uint32_t itemCount=0;
          displayMenu(currentCategory,&itemCount);
 
         printf("\nEnter 0 for skip this category.\nHow many types of item do you want to buy from category %s ? ", currentCategory->categoryName);
-        int numbers_of_item;
-        scanf("%d",&numbers_of_item);
+        uint32_t numbers_of_item;
+        scanf("%u",&numbers_of_item);
 
         if (numbers_of_item==0) {
             currentCategory = currentCategory->next;
             continue;
         }
 
-        for(unsigned int i=0;i<numbers_of_item;i++){
+        for(uint32_t i=0;i<numbers_of_item;i++){
         printf("Enter item numbers to order : ");
-        scanf("%d",&choice);
+        scanf("%u",&choice);
         while(choice<0 || choice>itemCount){
             printf("Invalid item number. Please enter a valid and available item number: \n");
-            scanf("%d",&choice);
+            scanf("%u",&choice);
         }
         MenuItem *item=currentCategory->items;
-         for(int i=1;i<choice;i++){
+         for(uint32_t i=1;i<choice;i++){
           item=item->next;
        }
-        int quantity;
+        uint32_t quantity;
          printf("Enter quantity : ");
-         scanf("%d",&quantity);
+         scanf("%u",&quantity);
          if(quantity <= item->stock){
             float subtotalBill=quantity*(item->price);
-                             fprintf(order_file, "%s - Quantity: %d - Subtotal: %.2f Taka\n", item->name, quantity, subtotalBill);
+                             fprintf(order_file, "%s - Quantity: %u - Subtotal: %.2f Taka\n", item->name, quantity, subtotalBill);
                     item->stock -= quantity;
 
                     totalBill += subtotalBill;
@@ -491,23 +506,23 @@ void takeorder(MenuCategory *menu){
                     printf("%s Price in subtotal : %.2f Taka\n", item->name, subtotalBill);
          }
          else {
-            printf("Insufficient stock. Please choose a quantity less than or equal to %d.\n", item->stock);
+            printf("Insufficient stock. Please choose a quantity less than or equal to %u.\n", item->stock);
             i--;
          }
         }
         currentCategory=currentCategory->next;
      }
-
+    
     fprintf(order_file," Total Bill of this customer: %0.2f Taka \n",totalBill);
     fprintf(order_file, "=========================================\n");
 
     fclose(order_file);
-
+    
     printf("Order Summary:\n");
-    printf("\nOrder Time: %04d-%02d-%02d %02d:%02d:%02d\n",
+    printf("Token number is %u \nOrder Date: %04d-%02d-%02d | Order Time: %02d:%02d:%02d\n",token_num,
             (*local_time).tm_year + 1900, (*local_time).tm_mon + 1, (*local_time).tm_mday,
             (*local_time).tm_hour, (*local_time).tm_min, (*local_time).tm_sec);
-    printf("Number of types of item ordered: %d\n", totalOderCount);
+    printf("Number of types of item ordered: %u\n", totalOderCount);
     printf("Total Bill: %.2f Taka\n", totalBill);
     printf("Thanks for coming.\n ");
     writeMenu(menu);
@@ -515,17 +530,16 @@ void takeorder(MenuCategory *menu){
      else {
         printf("Invalid inputs");
      }
-
 }
 
  void updateMenu(MenuCategory *menu ){
      MenuCategory *currentCategory = menu;
-     unsigned int x=1;
-      while(currentCategory){
+     uint32_t x=1;
+     while(currentCategory){
         displayMenu(currentCategory,&x);
         currentCategory=currentCategory->next;
         }
-    int choice;
+    uint32_t choice;
     printf("\nMenu Update Options:\n");
 
     printf("1. Add Item\n");
@@ -534,19 +548,19 @@ void takeorder(MenuCategory *menu){
     printf("4. Add Stock\n");
     printf("5. Back to Admin option\n");
     printf("Enter your choice: ");
-    scanf("%d", &choice);
+    scanf("%u", &choice);
     switch (choice)
     {
-    case 1 : addItem(menu);
+    case 1 :addItem(menu);
             updateMenu(menu);
               break;
-    case 2 : deleteItem(menu);
+    case 2 :deleteItem(menu);
             updateMenu(menu);
               break;
-    case 3 : changePrice(menu);
+    case 3 :changePrice(menu);
             updateMenu(menu);
               break;
-    case 4 : updateStock(menu);
+    case 4 :updateStock(menu);
             updateMenu(menu);
               break;
     case 5 :return ;
@@ -563,8 +577,13 @@ void viewsale(){
     }
 
     printf("\nSales Report:\n");
-    char buffer[500];
+    char buffer[200];
+    uint32_t is_first_line=1;
     while (fgets(buffer, sizeof(buffer), sales_report_file) != NULL) {
+        if(is_first_line){
+            is_first_line=0;
+            continue;
+        }
         // Check if the line contains the "Order Time" string
         if (strstr(buffer, "Order Time") != NULL) {
             printf("%s", buffer); // Print the date and time line
@@ -578,13 +597,10 @@ void viewsale(){
 void clearsalesreport(){
       FILE *sales_report_file = fopen(SALES_REPORT_FILE, "w");
 
-    if (sales_report_file == NULL  ) {
+    if (sales_report_file == NULL) {
         perror("Error opening sales report file");
         exit(EXIT_FAILURE);
     }
     fclose(sales_report_file);
     printf("Sales report cleared successfully.");
 }
-
-
-
