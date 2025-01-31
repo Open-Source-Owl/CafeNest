@@ -1,8 +1,6 @@
 #include "cafe.h"
 #include<stdio.h>
 
- /*use uint32_t 
- why use array with fixed size*/
 
 void read_pass(char password[]) {
 
