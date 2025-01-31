@@ -15,7 +15,8 @@
  * Main function of the program.
  * calls hompage
  * @return 0 on successful execution.
- */
+*/
+
 int main() {
        homepage();
     return 0;
