@@ -62,89 +62,89 @@ typedef struct MenuCategory {
  * Reads the admin password from the password file.
  * @param password: Array to store the password read from the file.
  */
-void readpass(char password[]);
+void read_pass(char password[]);
 
 /**
  * Allows the admin to change their password.
  */
-void changePass();
+void change_pass();
 
 /**
  * Handles admin login by validating the entered password.
  * @return 1 if the login is successful, 0 otherwise.
  */
-int adminlog();
+int admin_log();
 
 /**
  * Reads the menu data from the menu file and constructs a linked list of categories and items.
  * @return Pointer to the head of the linked list of menu categories.
  */
-MenuCategory* readMenu();
+MenuCategory* read_menu();
 
 /**
  * Displays the menu categories and their items.
  * @param currentCategory: Pointer to the current category to display.
  * @param flag: Pointer to an integer to track menu display state.
  */
-void displayMenu(MenuCategory *currentCategory, int *flag);
+void display_menu(MenuCategory *currentCategory, int *flag);
 
 /**
  * Writes the updated menu data to the menu file.
  * @param menu: Pointer to the head of the menu category linked list.
  */
-void writeMenu(MenuCategory *menu);
+void write_menu(MenuCategory *menu);
 
 /**
  * Adds a new item to a specific menu category.
  * @param menu: Pointer to the head of the menu category linked list.
  */
-void addItem(MenuCategory *menu);
+void add_item(MenuCategory *menu);
 
 /**
  * Deletes an item from a specific menu category.
  * @param menu: Pointer to the head of the menu category linked list.
  */
-void deleteItem(MenuCategory *menu);
+void delete_item(MenuCategory *menu);
 
 /**
  * Changes the price of an item in a specific menu category.
  * @param menu: Pointer to the head of the menu category linked list.
  */
-void changePrice(MenuCategory *menu);
+void change_price(MenuCategory *menu);
 
 /**
  * Updates the stock quantity of an item in a specific menu category.
  * @param menu: Pointer to the head of the menu category linked list.
  */
-void updateStock(MenuCategory *menu);
+void update_stock(MenuCategory *menu);
 
 /**
  * Generates a unique token number for customer orders.
  * @return The generated token number.
  */
-int generateToken();
+int generate_token();
 
 /**
  * Handles customer order placement.
  * @param menu: Pointer to the head of the menu category linked list.
  */
-void takeorder(MenuCategory *menu);
+void take_order(MenuCategory *menu);
 
 /**
  * Provides admin options to update the menu (add, delete, change price, update stock).
  * @param menu: Pointer to the head of the menu category linked list.
  */
-void updateMenu(MenuCategory *menu);
+void update_menu(MenuCategory *menu);
 
 /**
  * Displays the sales report from the sales report file.
  */
-void viewsale();
+void view_sale();
 
 /**
  * Clears the sales report by overwriting the file with an empty state.
  */
-void clearsalesreport();
+void clear_sales_report();
 
 /**
  * admin operation handles with this function
