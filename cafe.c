@@ -4,7 +4,7 @@
  /*use uint32_t 
  why use array with fixed size*/
 
-void readpass(char password[]) {
+void read_pass(char password[]) {
 
     FILE *file = fopen(PASSWORD_FILE, "r");
 
@@ -16,11 +16,11 @@ void readpass(char password[]) {
     fclose(file);
 }
 
-void changePass(){
+void change_pass(){
      char enteredpass[10];
      char correctpass[10];
 
-     readpass(correctpass);
+     read_pass(correctpass);
 
     FILE *file = fopen(PASSWORD_FILE, "w");
 
@@ -68,7 +68,7 @@ void changePass(){
     if(pass[i]==' ')
     {
         printf("Error, your password cannot contain space.\nTry again,\n");
-        changePass();
+        change_pass();
     }
     else
         fprintf(file, "%c", pass[i]);
@@ -82,11 +82,11 @@ void changePass(){
         printf("Wrong password.Try again");
     }
 }
-int adminlog(){
+int admin_log(){
     char enteredpass[10];
     char correctpass[10];
 
-     readpass(correctpass);
+     read_pass(correctpass);
 
     printf("Admin Password: ");
 
@@ -137,7 +137,7 @@ int adminlog(){
         switch(choice)
         {
     case 1:
-        adminlog();
+        admin_log();
         break;
     case 2:
         return 0;
@@ -150,7 +150,7 @@ int adminlog(){
     }
 }
 
-MenuCategory* readMenu() {
+MenuCategory* read_menu() {
     FILE *file = fopen(MENU_FILE, "r");
     if (!file) {
         printf("Error opening menu file");
@@ -192,7 +192,7 @@ MenuCategory* readMenu() {
     fclose(file);
     return head;
 }
-void displayMenu(MenuCategory *currentCategory, int *flag){
+void display_menu(MenuCategory *currentCategory, int *flag){
    if(*flag==1){
     printf("\n--- %s ---\n", currentCategory->categoryName);
         MenuItem *currentItem = currentCategory->items;
@@ -221,7 +221,7 @@ void displayMenu(MenuCategory *currentCategory, int *flag){
    }
 }
 
-void writeMenu(MenuCategory *menu) {
+void write_menu(MenuCategory *menu) {
 
     FILE *file = fopen(MENU_FILE, "w");
     if (!file) {
@@ -242,7 +242,7 @@ void writeMenu(MenuCategory *menu) {
     fclose(file);
 
 }
-void addItem(MenuCategory *menu) {
+void add_item(MenuCategory *menu) {
 
     float price;
     uint32_t availability;
@@ -274,12 +274,12 @@ void addItem(MenuCategory *menu) {
             newItem->next = currentCategory->items;
             currentCategory->items = newItem;
             printf("Product added successfully!\n");
-            writeMenu(menu);
+            write_menu(menu);
             return;
 
 }
 
-void deleteItem(MenuCategory *menu) {
+void delete_item(MenuCategory *menu) {
     MenuCategory *currentCategory = menu;
     uint32_t choice;
 
@@ -350,10 +350,10 @@ void deleteItem(MenuCategory *menu) {
     printf("Item deleted successfully.\n");
 
     // Update the menu file
-    writeMenu(menu);
+    write_menu(menu);
 }
 
-void changePrice(MenuCategory *menu){
+void change_price(MenuCategory *menu){
 
     MenuCategory *currentCategory = menu;
 
@@ -380,12 +380,12 @@ void changePrice(MenuCategory *menu){
     }
      printf("Enter new for %s : ",currentMenu->name);
      scanf("%f",&currentMenu->price);
-     writeMenu(menu);
+     write_menu(menu);
      printf("Successfully Updated");
 
 }
 
-void updateStock(MenuCategory *menu){
+void update_stock(MenuCategory *menu){
 
      MenuCategory *currentCategory = menu;
      uint32_t choice;
@@ -408,22 +408,23 @@ void updateStock(MenuCategory *menu){
         currentMenu=currentMenu->next;
     }
     uint32_t a;
-    do{
-        printf("Enter new stock: ");
-         scanf("%u", &a);
-    }while(a!=0 || a!=1);
+    printf("Enter new stock: "); 
+    scanf("%u",&a);
+    while(a<1){
+        printf("Invalid! Enter stock more than zero: ");
+        scanf("%u",&a);
+       }
      currentMenu->stock=a;
-     writeMenu(menu);
+     write_menu(menu);
      printf("Successfully Updated");
  }
-int generateToken(){
+int generate_token(){
     uint32_t num;
     FILE *file = fopen(SALES_REPORT_FILE, "r+");
      if (!file) {
         printf("Error opening menu file");
         exit(1);
     }
-   
    
     fscanf(file,"%u",&num);
     if(num==0){
@@ -437,12 +438,13 @@ int generateToken(){
     fclose(file);
     return num;
 }
-void takeorder(MenuCategory *menu){
+
+void take_order(MenuCategory *menu){
          
     MenuCategory *currentCategory = menu;
     uint32_t x=0;
     while(currentCategory){
-        displayMenu(currentCategory,&x);
+        display_menu(currentCategory,&x);
         currentCategory=currentCategory->next;
         }
         currentCategory=menu;
@@ -461,7 +463,7 @@ void takeorder(MenuCategory *menu){
 
         choice=0;
  
-     uint32_t token_num=generateToken();
+     uint32_t token_num=generate_token();
 
      time_t current_time;
     struct tm *local_time;
@@ -489,7 +491,7 @@ void takeorder(MenuCategory *menu){
         while(currentCategory){
             printf("Select item from %s to place order ",currentCategory->categoryName);
         uint32_t itemCount=0;
-         displayMenu(currentCategory,&itemCount);
+         display_menu(currentCategory,&itemCount);
 
         printf("\nEnter 0 for skip this category.\nHow many types of item do you want to buy from category %s ? ", currentCategory->categoryName);
         uint32_t numbers_of_item;
@@ -532,7 +534,7 @@ void takeorder(MenuCategory *menu){
      }
     
     fprintf(order_file," Total Bill of this customer: %0.2f Taka \n",totalBill);
-    fprintf(order_file, "=========================================\n");
+    fprintf(order_file,"=========================================\n");
 
     fclose(order_file);
     
@@ -543,18 +545,18 @@ void takeorder(MenuCategory *menu){
     printf("Number of types of item ordered: %u\n", totalOderCount);
     printf("Total Bill: %.2f Taka\n", totalBill);
     printf("Thanks for coming.\n ");
-    writeMenu(menu);
+    write_menu(menu);
      }
      else {
         printf("Invalid inputs");
      }
 }
 
- void updateMenu(MenuCategory *menu ){
+ void update_menu(MenuCategory *menu ){
      MenuCategory *currentCategory = menu;
      uint32_t x=1;
      while(currentCategory){
-        displayMenu(currentCategory,&x);
+        display_menu(currentCategory,&x);
         currentCategory=currentCategory->next;
         }
     uint32_t choice;
@@ -569,24 +571,25 @@ void takeorder(MenuCategory *menu){
     scanf("%u", &choice);
     switch (choice)
     {
-    case 1 :addItem(menu);
-            updateMenu(menu);
+    case 1 :add_item(menu);
+            update_menu(menu);
               break;
-    case 2 :deleteItem(menu);
-            updateMenu(menu);
+    case 2 :delete_item(menu);
+            update_menu(menu);
               break;
-    case 3 :changePrice(menu);
-            updateMenu(menu);
+    case 3 :change_price(menu);
+            update_menu(menu);
               break;
-    case 4 :updateStock(menu);
-            updateMenu(menu);
+    case 4 :update_stock(menu);
+            update_menu(menu);
               break;
     case 5 :return ;
     default:
         printf("Invalid choice.");
     }
 }
-void viewsale(){
+void view_sale(){
+    
       FILE *sales_report_file = fopen(SALES_REPORT_FILE, "r");
 
     if (sales_report_file == NULL) {
@@ -612,7 +615,7 @@ void viewsale(){
 
     fclose(sales_report_file);
 }
-void clearsalesreport(){
+void clear_sales_report(){
       FILE *sales_report_file = fopen(SALES_REPORT_FILE, "w");
 
     if (sales_report_file == NULL) {
@@ -624,7 +627,7 @@ void clearsalesreport(){
 }
 
 /*
- *admin function of the program.
+ * admin function of the program.
  * Provides options for admin login.
  */
 
@@ -646,28 +649,28 @@ void admin(MenuCategory *menu,MenuCategory *currentCategory,uint32_t *login){
             switch (choice) {
                 case 1:
                     // Update menu
-                    updateMenu(menu);
+                    update_menu(menu);
                     break;
                 case 2:
                     // Display menu
                     x = 1;
                     while (currentCategory) {
-                        displayMenu(currentCategory, &x);
+                        display_menu(currentCategory, &x);
                         currentCategory = currentCategory->next;
                     }
                     currentCategory = menu;
                     break;
                 case 3:
                     // View sales report
-                    viewsale();
+                    view_sale();
                     break;
                 case 4:
                     // Clear sales report
-                    clearsalesreport();
+                    clear_sales_report();
                     break;
                 case 5:
                     // Change admin password
-                    changePass();
+                    change_pass();
                     break;
                 case 6:
                     // Log out
@@ -689,7 +692,7 @@ void admin(MenuCategory *menu,MenuCategory *currentCategory,uint32_t *login){
  */
 
 void homepage(){
- MenuCategory *menu = readMenu(); // Load the menu from the file
+ MenuCategory *menu = read_menu(); // Load the menu from the file
     MenuCategory *currentCategory = menu;
     uint32_t choice; // Variable to store user input for menu options
     uint32_t login = 0; // Login state (0: not logged in, 1: logged in as admin)
@@ -707,7 +710,7 @@ void homepage(){
             switch (choice) {
                 case 1:
                     // Admin login
-                    if (adminlog()) {
+                    if (admin_log()) {
                         login = 1;
                         printf("Welcome to the system.\n");
                     } else {
@@ -717,7 +720,7 @@ void homepage(){
                     break;
                 case 2:
                     // Customer interaction
-                    takeorder(menu);
+                    take_order(menu);
                     break;
                 case 3:
                     // Exit the program
