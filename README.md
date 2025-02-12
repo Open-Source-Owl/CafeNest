@@ -2,7 +2,7 @@
 
 ---
 
-## ** Automated Cafeteria **
+##  Automated Cafeteria 
 
 ### **Overview**
 This project is an automated cafeteria management system designed to streamline operations in a university café. It provides a menu-driven interface for both administrators and customers, enabling functionalities like managing menu items, placing orders, and generating sales reports.
